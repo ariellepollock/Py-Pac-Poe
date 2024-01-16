@@ -1,5 +1,5 @@
 ##############################################
-#  STEP 1 - display welcome message
+#  display welcome message
 ##############################################
 def display_message():
     message = "Let's play Py-Pac-Poe!"
@@ -11,7 +11,7 @@ def display_message():
 display_message()
 
 ####################################################
-#  STEP 2 - display printed board + existing moves
+#  display printed board + existing moves
 ####################################################
 board = {
     'a1': ' ', 'b1': ' ', 'c1': ' ',
@@ -20,36 +20,44 @@ board = {
 }
 
 def display_board(player):
-    print(
-        """
-        A   B   C
+    valid_input = False
+    move = ""
 
-    1)  {} | {} | {} 
-        ----------
-    2)  {} | {} | {}
-        ----------
-    3)  {} | {} | {}
-    """.format(
-        str(board['a1'] or ' '), str(board['b1'] or ' '), str(board['c1'] or ' '),
-        str(board['a2'] or ' '), str(board['b2'] or ' '), str(board['c2'] or ' '),
-        str(board['a3'] or ' '), str(board['b3'] or ' '), str(board['c3'] or ' ')
+    while not valid_input:
+
+        # Display the board first
+        print(
+            f"""
+            A   B   C
+
+        1)  {board['a1'] or ' '} | {board['b1'] or ' '} | {board['c1'] or ' '} 
+            ----------
+        2)  {board['a2'] or ' '} | {board['b2'] or ' '} | {board['c2'] or ' '}
+            ----------
+        3)  {board['a3'] or ' '} | {board['b3'] or ' '} | {board['c3'] or ' '}
+        """
         )
-    )
-    #  STEP 3 - prompt players turn
-    #  STEP 4 - prompt how to enter valid move
-    move = input(f"Player {player}'s move (example B2): ")
-    
-    #  STEP 5 - upper or lower case
-    if move: 
-        column = move[0].lower()
-        row = move[1]
-        formatted_move = column + row
-    else:
-        formatted_move = ""
-    return formatted_move
+
+        # Prompt for player's move
+        move = input(f"Player {player}'s Move (example B2): ")
+
+        # Validate the move
+        if len(move) == 2 and move[0].lower() in ['a', 'b', 'c'] and move[1] in ['1', '2', '3']:
+            column = move[0].lower()
+            row = move[1]
+            position = column + row
+
+            if board[position] == ' ':
+                valid_input = True
+            else:
+                print("That cell is already occupied! Try again...")
+        else:
+            print("Bogus move! Try again...")
+
+    return move
     
 ##############################################
-#  STEP 3 - prompt players turn
+#  prompt players turn
 ##############################################
 current_player = 'X'
 
