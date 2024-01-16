@@ -10,9 +10,9 @@ def display_message():
 
 display_message()
 
-##############################################
-#  STEP 2 - see printed board + existing moves
-##############################################
+####################################################
+#  STEP 2 - display printed board + existing moves
+####################################################
 board = {}
 
 def display_board():
@@ -31,4 +31,11 @@ def display_board():
         str(board['a3'] or ' '), str(board['b3'] or ' '), str(board['c3'] or ' ')
     )
 )
+    
+##############################################
+#  STEP 3 - prompt players turn
+##############################################
+current_player = 'X'
 
+def prompt_player_turn(player):
+    print(f"It's player {player}'s turn")
