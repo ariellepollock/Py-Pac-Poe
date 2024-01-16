@@ -13,4 +13,22 @@ display_message()
 ##############################################
 #  STEP 2 - see printed board + existing moves
 ##############################################
+board = {}
+
+def display_board():
+    print(
+        """
+        A   B   C
+
+    1)  {} | {} | {} 
+        ----------
+    2)  {} | {} | {}
+        ----------
+    3)  {} | {} | {}
+    """.format(
+        str(board['a1'] or ' '), str(board['b1'] or ' '), str(board['c1'] or ' '),
+        str(board['a2'] or ' '), str(board['b2'] or ' '), str(board['c2'] or ' '),
+        str(board['a3'] or ' '), str(board['b3'] or ' '), str(board['c3'] or ' ')
+    )
+)
 
