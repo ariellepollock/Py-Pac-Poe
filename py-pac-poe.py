@@ -1,16 +1,4 @@
 ##############################################
-#  Global state
-##############################################
-state = {
-    'board': {
-        'a1': ' ', 'b1': ' ', 'c1': ' ',
-        'a2': ' ', 'b2': ' ', 'c2': ' ',
-        'a3': ' ', 'b3': ' ', 'c3': ' ',
-    },
-    'turn': 'X'
-}
-
-##############################################
 #  display welcome message
 ##############################################
 def display_message():
@@ -19,6 +7,15 @@ def display_message():
     print(frame)
     print(message)
     print(frame)
+
+##############################################
+#  Global state
+##############################################
+score = {'X': 0, 'O': 0, 'T': 0}
+num_wins = int(input("How many wins to play to? "))
+board = {}
+turn = 'X'
+winner = None
 
 ##############################################
 #  display board
@@ -65,13 +62,13 @@ def prompt_player_turn():
 def check_winner(board, player):
     # Check rows, columns, and diagonals for a win
     for i in range(1, 4):
-        if board[f'a{i}'] == board[f'b{i}'] == board[f'c{i}'] == player:  # Check row
+        if board[f'a{i}'] == board[f'b{i}'] == board[f'c{i}'] == player and board[f'a{i}'] != ' ':  # Check row
             return True
-        if board[f'{chr(96 + i)}1'] == board[f'{chr(96 + i)}2'] == board[f'{chr(96 + i)}3'] == player:  # Check column
+        if board[f'{chr(96 + i)}1'] == board[f'{chr(96 + i)}2'] == board[f'{chr(96 + i)}3'] == player and board[f'{chr(96 + i)}1'] != ' ':  # Check column
             return True
 
     # Check diagonals
-    if board['a1'] == board['b2'] == board['c3'] == player or board['a3'] == board['b2'] == board['c1'] == player:
+    if (board['a1'] == board['b2'] == board['c3'] == player or board['a3'] == board['b2'] == board['c1'] == player) and board['b2'] != ' ':
         return True
 
     return False
