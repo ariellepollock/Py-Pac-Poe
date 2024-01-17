@@ -78,6 +78,16 @@ def check_winner(board, player):
 
     return False
 
+def is_board_full(board):
+    return all(cell != ' ' for cell in board.values())
+
+if check_winner(board, current_player):
+    print(f"Player {current_player} wins the game!")
+    # End the game or start a new game
+elif is_board_full(board):
+    print("Another tie!")
+    # End the game or start a new game
+
 # Example of how to use this in your game loop
 # ... [game loop code] ...
 if check_winner(board, current_player):
