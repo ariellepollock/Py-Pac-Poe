@@ -18,83 +18,92 @@ turn = 'X'
 winner = None
 
 ##############################################
-#  display board
+#  player turn while no winner
 ##############################################
-def display_board():
-    board = state['board']
+def play_game():
+    global winner, turn
+    init_game()
+    while not winner:
+        print_board()
+        move = get_move()
+        board[move] = turn
+
+        turn = 'O' if turn == 'X' else 'X'
+        winner = get_winner()
+    handle_winner()
+
+##############################################
+#  initialize game
+##############################################
+def init_game():
+    global board, turn, winner
+    board = {
+        'a1': None, 'b1': None, 'c1': None,
+        'a2': None, 'b2': None, 'c2': None,
+        'a3': None, 'b3': None, 'c3': None
+    }
+    turn = 'X'
+    winner = None
+
+##############################################
+#  print board
+##############################################
+def print_board():
     print(
-        f"""
-        A   B   C
-
-    1)  {board['a1'] or ' '} | {board['b1'] or ' '} | {board['c1'] or ' '} 
-        ----------
-    2)  {board['a2'] or ' '} | {board['b2'] or ' '} | {board['c2'] or ' '}
-        ----------
-    3)  {board['a3'] or ' '} | {board['b3'] or ' '} | {board['c3'] or ' '}
         """
+            A   B   C
+        1)  {} | {} | {} 
+            ----------
+        2)  {} | {} | {}
+            ----------
+        3)  {} | {} | {}
+        """.format(
+        str(board['a1'] or ' '), str(board['b1'] or ' '), str(board['c1'] or ' '),
+        str(board['a2'] or ' '), str(board['b2'] or ' '), str(board['c2'] or ' '),
+        str(board['a3'] or ' '), str(board['b3'] or ' '), str(board['c3'] or ' ')
+        )
     )
-    
-##############################################
-#  prompt players turn
-##############################################
-def prompt_player_turn():
-    player = state['turn']
-    board = state['board']
-    valid_input = False
-    move = ""
-
-    while not valid_input:
-        move = input(f"Player {player}'s Move (example B2): ").lower()
-
-        if len(move) == 2 and move[0] in ['a', 'b', 'c'] and move[1] in ['1', '2', '3']:
-            if state['board'][move] == ' ':
-                valid_input = True
-            else:
-                print("That cell is already occupied! Try again...")
-        else:
-            print("Bogus move! Try again...")
-
-    return move
 
 ##############################################
-#  Check winner or tie
+#  get move + prompt example
 ##############################################
-def check_winner(board, player):
-    # Check rows, columns, and diagonals for a win
-    for i in range(1, 4):
-        if board[f'a{i}'] == board[f'b{i}'] == board[f'c{i}'] == player and board[f'a{i}'] != ' ':  # Check row
-            return True
-        if board[f'{chr(96 + i)}1'] == board[f'{chr(96 + i)}2'] == board[f'{chr(96 + i)}3'] == player and board[f'{chr(96 + i)}1'] != ' ':  # Check column
-            return True
-
-    # Check diagonals
-    if (board['a1'] == board['b2'] == board['c3'] == player or board['a3'] == board['b2'] == board['c1'] == player) and board['b2'] != ' ':
-        return True
-
-    return False
-
-def is_board_full(board):
-    return all(cell != ' ' for cell in board.values())
-
-##############################################
-#  Game loop
-##############################################
-def game_loop():
-    display_message()
-
+def get_move():
     while True:
-        display_board()
-        move = prompt_player_turn()
-        state['board'][move] = state['turn']
+        move = input(f"Player {turn}'s Move (example B2): ").lower()
+        if move in board and not board[move]:
+            return move
+        else:
+            print("Bogus move! Try again...\n")
 
-        if check_winner(state['board'], state['turn']):
-            print(f"Player {state['turn']} wins the game!")
-            break
-        elif is_board_full(state['board']):
-            print("Another tie!")
-            break
+##############################################
+#  who wins
+##############################################
+def get_winner():
+    b = board
+    if b['a1'] and (b['a1'] == b['b1'] == b['c1']): return b['a1']
+    if b['a2'] and (b['a2'] == b['b2'] == b['c2']): return b['a2']
+    if b['a3'] and (b['a3'] == b['b3'] == b['c3']): return b['a3']
+    if b['a1'] and (b['a1'] == b['a2'] == b['a3']): return b['a1']
+    if b['b1'] and (b['b1'] == b['b2'] == b['b3']): return b['b1']
+    if b['c1'] and (b['c1'] == b['c2'] == b['c3']): return b['c1']
+    if b['a1'] and (b['a1'] == b['b2'] == b['c3']): return b['a1']
+    if b['c1'] and (b['c1'] == b['b2'] == b['a3']): return b['c1']
+    return None if None in b.values() else 'T'
 
-        # Toggle player
-        state['turn'] = 'X' if state['turn'] == 'O' else 'O'
+##############################################
+#  player wins, players tie
+##############################################
+def handle_winner():
+    print_board()
+    if winner == 'T':
+        print("Another tie!")
+    else:
+        print("Player", winner, "wins the game!\n")
+    score[winner] += 1
+    print(f"SCORE:\nPlayer X: {score['X']}  Player O: {score['O']}  Ties: {score['T']}\n")
+    if score['X'] == num_wins or score['O'] == num_wins:
+        print(f"\nCongrats to player {winner} for winning {num_wins} game{'s' if num_wins > 1 else ''}!\n")
+    else:
+        play_game()
 
-game_loop()
+play_game()
